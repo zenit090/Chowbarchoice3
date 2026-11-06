@@ -1,0 +1,452 @@
+
+--[[
+    CHOWBARCHOICE 3
+    Roblox Studio - LocalScript
+    Mobile UI Framework
+]]
+
+local Players = game:GetService("Players")
+local UIS = game:GetService("UserInputService")
+
+local Player = Players.LocalPlayer
+local PlayerGui = Player:WaitForChild("PlayerGui")
+
+local Config = {
+    Name = "Nhân Sigma",
+    Subtitle = "KIETCUBU AKA NEYMARJR",
+    DefaultIcon = "CUDAI",
+    CustomIcon = "",
+    Width = 360,
+}
+
+local old = PlayerGui:FindFirstChild("ChowBarChoice3")
+if old then old:Destroy() end
+
+local GUI = Instance.new("ScreenGui")
+GUI.Name = "ChowBarChoice3"
+GUI.ResetOnSpawn = false
+GUI.DisplayOrder = 100
+GUI.Parent = PlayerGui
+
+local function Create(class, props, parent)
+    local obj = Instance.new(class)
+    for k,v in pairs(props) do
+        obj[k] = v
+    end
+    obj.Parent = parent
+    return obj
+end
+
+local Main = Create("Frame", {
+    Size = UDim2.fromOffset(Config.Width, 430),
+    Position = UDim2.new(0.5, -180, 0.5, -215),
+    BackgroundColor3 = Color3.fromRGB(19, 24, 35),
+    BorderSizePixel = 0,
+}, GUI)
+
+Create("UICorner", {
+    CornerRadius = UDim.new(0, 12)
+}, Main)
+
+Create("UIStroke", {
+    Color = Color3.fromRGB(65, 80, 105),
+    Thickness = 1
+}, Main)
+
+-- HEADER
+
+local Header = Create("Frame", {
+    Size = UDim2.new(1, 0, 0, 76),
+    BackgroundColor3 = Color3.fromRGB(29, 39, 57),
+    BorderSizePixel = 0
+}, Main)
+
+Create("UICorner", {
+    CornerRadius = UDim.new(0, 12)
+}, Header)
+
+local IconLabel = Create("TextLabel", {
+    Position = UDim2.fromOffset(12, 12),
+    Size = UDim2.fromOffset(48, 48),
+    BackgroundColor3 = Color3.fromRGB(45, 57, 77),
+    Text = Config.DefaultIcon,
+    TextColor3 = Color3.new(1,1,1),
+    TextSize = 18,
+    Font = Enum.Font.GothamBold
+}, Header)
+
+Create("UICorner", {
+    CornerRadius = UDim.new(0, 10)
+}, IconLabel)
+
+local Title = Create("TextLabel", {
+    Position = UDim2.fromOffset(70, 13),
+    Size = UDim2.new(1, -125, 0, 25),
+    BackgroundTransparency = 1,
+    Text = Config.Name,
+    TextColor3 = Color3.new(1,1,1),
+    TextSize = 17,
+    Font = Enum.Font.GothamBold,
+    TextXAlignment = Enum.TextXAlignment.Left
+}, Header)
+
+local Subtitle = Create("TextLabel", {
+    Position = UDim2.fromOffset(70, 39),
+    Size = UDim2.new(1, -125, 0, 20),
+    BackgroundTransparency = 1,
+    Text = Config.Subtitle,
+    TextColor3 = Color3.fromRGB(255, 55, 55),
+    TextSize = 11,
+    Font = Enum.Font.GothamBold,
+    TextXAlignment = Enum.TextXAlignment.Left
+}, Header)
+
+local Minimize = Create("TextButton", {
+    Position = UDim2.new(1, -42, 0, 17),
+    Size = UDim2.fromOffset(30, 30),
+    BackgroundColor3 = Color3.fromRGB(48, 62, 83),
+    Text = "-",
+    TextColor3 = Color3.new(1,1,1),
+    TextSize = 23,
+    Font = Enum.Font.GothamBold
+}, Header)
+
+Create("UICorner", {
+    CornerRadius = UDim.new(0, 8)
+}, Minimize)
+
+-- CONTENT
+
+local Content = Create("Frame", {
+    Position = UDim2.fromOffset(10, 85),
+    Size = UDim2.new(1, -20, 1, -95),
+    BackgroundTransparency = 1
+}, Main)
+
+local Tabs = Create("Frame", {
+    Size = UDim2.new(1, 0, 0, 38),
+    BackgroundTransparency = 1
+}, Content)
+
+local TabLayout = Create("UIListLayout", {
+    FillDirection = Enum.FillDirection.Horizontal,
+    Padding = UDim.new(0, 5),
+    HorizontalAlignment = Enum.HorizontalAlignment.Left
+}, Tabs)
+
+local Pages = Create("Frame", {
+    Position = UDim2.fromOffset(0, 46),
+    Size = UDim2.new(1, 0, 1, -46),
+    BackgroundTransparency = 1
+}, Content)
+
+local PageLayout = Create("UIPageLayout", {
+    SortOrder = Enum.SortOrder.LayoutOrder,
+    EasingStyle = Enum.EasingStyle.Quart,
+    TweenTime = 0.2
+}, Pages)
+
+local CurrentPage
+
+local function NewPage(name)
+    local page = Create("ScrollingFrame", {
+        Name = name,
+        Size = UDim2.fromScale(1,1),
+        BackgroundTransparency = 1,
+        BorderSizePixel = 0,
+        ScrollBarThickness = 3,
+        CanvasSize = UDim2.new(0,0,0,0),
+        AutomaticCanvasSize = Enum.AutomaticSize.Y,
+        Visible = false
+    }, Pages)
+
+    local layout = Create("UIListLayout", {
+        Padding = UDim.new(0, 8),
+        SortOrder = Enum.SortOrder.LayoutOrder
+    }, page)
+
+    page.Visible = true
+    return page
+end
+
+local function Toggle(parent, name, callback)
+    local enabled = false
+
+    local Row = Create("Frame", {
+        Size = UDim2.new(1, -5, 0, 47),
+        BackgroundColor3 = Color3.fromRGB(31, 40, 56),
+        BorderSizePixel = 0
+    }, parent)
+
+    Create("UICorner", {
+        CornerRadius = UDim.new(0, 8)
+    }, Row)
+
+    Create("TextLabel", {
+        Position = UDim2.fromOffset(12,0),
+        Size = UDim2.new(1,-85,1,0),
+        BackgroundTransparency = 1,
+        Text = name,
+        TextColor3 = Color3.new(1,1,1),
+        Font = Enum.Font.GothamMedium,
+        TextSize = 13,
+        TextXAlignment = Enum.TextXAlignment.Left
+    }, Row)
+
+    local Switch = Create("TextButton", {
+        Position = UDim2.new(1,-67,0.5,-12),
+        Size = UDim2.fromOffset(53,24),
+        BackgroundColor3 = Color3.fromRGB(66,73,88),
+        Text = "",
+        AutoButtonColor = false
+    }, Row)
+
+    Create("UICorner", {
+        CornerRadius = UDim.new(1,0)
+    }, Switch)
+
+    local Knob = Create("Frame", {
+        Position = UDim2.fromOffset(3,3),
+        Size = UDim2.fromOffset(18,18),
+        BackgroundColor3 = Color3.new(1,1,1)
+    }, Switch)
+
+    Create("UICorner", {
+        CornerRadius = UDim.new(1,0)
+    }, Knob)
+
+    Switch.MouseButton1Click:Connect(function()
+        enabled = not enabled
+
+        Switch.BackgroundColor3 = enabled
+            and Color3.fromRGB(30,160,105)
+            or Color3.fromRGB(66,73,88)
+
+        Knob:TweenPosition(
+            UDim2.fromOffset(enabled and 32 or 3,3),
+            Enum.EasingDirection.Out,
+            Enum.EasingStyle.Quad,
+            0.12,
+            true
+        )
+
+        if callback then
+            callback(enabled)
+        end
+    end)
+
+    return function()
+        return enabled
+    end
+end
+
+-- PAGES
+
+local Fishing = NewPage("Fishing")
+local Teleport = NewPage("Teleport")
+local PlayerPage = NewPage("Player")
+local Settings = NewPage("Settings")
+
+local pageList = {
+    {"Fishing", Fishing},
+    {"Teleport", Teleport},
+    {"Player", PlayerPage},
+    {"Settings", Settings}
+}
+
+for i, item in ipairs(pageList) do
+    local button = Create("TextButton", {
+        Size = UDim2.fromOffset(79,34),
+        BackgroundColor3 = Color3.fromRGB(39,51,70),
+        Text = item[1],
+        TextColor3 = Color3.new(1,1,1),
+        Font = Enum.Font.GothamMedium,
+        TextSize = 11,
+        LayoutOrder = i
+    }, Tabs)
+
+    Create("UICorner", {
+        CornerRadius = UDim.new(0,7)
+    }, button)
+
+    button.MouseButton1Click:Connect(function()
+        PageLayout:JumpTo(item[2])
+    end)
+end
+
+-- FISHING UI
+Toggle(Fishing, "Auto Fishing")
+Toggle(Fishing, "Auto Reel")
+Toggle(Fishing, "Auto Shake")
+
+-- TELEPORT
+Create("TextLabel", {
+    Size = UDim2.new(1,-5,0,35),
+    BackgroundTransparency = 1,
+    Text = "DESTINATION POINTS",
+    TextColor3 = Color3.new(1,1,1),
+    Font = Enum.Font.GothamBold,
+    TextSize = 13,
+    TextXAlignment = Enum.TextXAlignment.Left
+}, Teleport)
+
+Create("TextLabel", {
+    Size = UDim2.new(1,-5,0,65),
+    BackgroundColor3 = Color3.fromRGB(31,40,56),
+    Text = "Teleport points are loaded from authorized locations in your own experience.",
+    TextWrapped = true,
+    TextColor3 = Color3.fromRGB(190,200,215),
+    Font = Enum.Font.Gotham,
+    TextSize = 12
+}, Teleport)
+
+-- PLAYER
+Toggle(PlayerPage, "Speed Modifier", function(on)
+    local char = Player.Character
+    local hum = char and char:FindFirstChildOfClass("Humanoid")
+    if hum then
+        hum.WalkSpeed = on and 32 or 16
+    end
+end)
+
+Toggle(PlayerPage, "Infinite Jump", function(on)
+    _G.ChowInfiniteJump = on
+end)
+
+UIS.JumpRequest:Connect(function()
+    if not _G.ChowInfiniteJump then return end
+
+    local char = Player.Character
+    local hum = char and char:FindFirstChildOfClass("Humanoid")
+
+    if hum then
+        hum:ChangeState(Enum.HumanoidStateType.Jumping)
+    end
+end)
+
+-- SETTINGS: CUSTOM ICON
+
+local Input = Create("TextBox", {
+    Size = UDim2.new(1,-5,0,42),
+    BackgroundColor3 = Color3.fromRGB(31,40,56),
+    PlaceholderText = "Roblox Image Asset ID",
+    Text = "",
+    TextColor3 = Color3.new(1,1,1),
+    PlaceholderColor3 = Color3.fromRGB(140,150,165),
+    Font = Enum.Font.Gotham,
+    TextSize = 12,
+    ClearTextOnFocus = false
+}, Settings)
+
+Create("UICorner", {
+    CornerRadius = UDim.new(0,8)
+}, Input)
+
+local Apply = Create("TextButton", {
+    Size = UDim2.new(1,-5,0,40),
+    BackgroundColor3 = Color3.fromRGB(39,110,170),
+    Text = "APPLY ICON",
+    TextColor3 = Color3.new(1,1,1),
+    Font = Enum.Font.GothamBold,
+    TextSize = 12
+}, Settings)
+
+Create("UICorner", {
+    CornerRadius = UDim.new(0,8)
+}, Apply)
+
+Apply.MouseButton1Click:Connect(function()
+    local id = Input.Text:match("^%d+$")
+
+    if id then
+        IconLabel.Text = ""
+        IconLabel.BackgroundTransparency = 1
+
+        local image = IconLabel:FindFirstChild("CustomImage")
+        if not image then
+            image = Create("ImageLabel", {
+                Name = "CustomImage",
+                Size = UDim2.fromScale(1,1),
+                BackgroundTransparency = 1
+            }, IconLabel)
+            Create("UICorner", {
+                CornerRadius = UDim.new(0,10)
+            }, image)
+        end
+
+        image.Image = "rbxassetid://" .. id
+    end
+end)
+
+-- MINIMIZE AND RESTORE
+
+local MiniButton = Create("TextButton", {
+    Size = UDim2.fromOffset(55,55),
+    Position = UDim2.new(0,20,0.5,-27),
+    BackgroundColor3 = Color3.fromRGB(29,39,57),
+    Text = Config.DefaultIcon,
+    TextColor3 = Color3.new(1,1,1),
+    TextSize = 19,
+    Font = Enum.Font.GothamBold,
+    Visible = false
+}, GUI)
+
+Create("UICorner", {
+    CornerRadius = UDim.new(1,0)
+}, MiniButton)
+
+Minimize.MouseButton1Click:Connect(function()
+    Main.Visible = false
+    MiniButton.Visible = true
+end)
+
+MiniButton.MouseButton1Click:Connect(function()
+    Main.Visible = true
+    MiniButton.Visible = false
+end)
+
+-- DRAG SUPPORT
+
+local function MakeDraggable(frame, handle)
+    local active = false
+    local startPos
+    local origin
+
+    handle.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1
+        or input.UserInputType == Enum.UserInputType.Touch then
+            active = true
+            startPos = input.Position
+            origin = frame.Position
+        end
+    end)
+
+    UIS.InputChanged:Connect(function(input)
+        if active and (
+            input.UserInputType == Enum.UserInputType.MouseMovement
+            or input.UserInputType == Enum.UserInputType.Touch
+        ) then
+            local delta = input.Position - startPos
+            frame.Position = UDim2.new(
+                origin.X.Scale,
+                origin.X.Offset + delta.X,
+                origin.Y.Scale,
+                origin.Y.Offset + delta.Y
+            )
+        end
+    end)
+
+    UIS.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1
+        or input.UserInputType == Enum.UserInputType.Touch then
+            active = false
+        end
+    end)
+end
+
+MakeDraggable(Main, Header)
+MakeDraggable(MiniButton, MiniButton)
+
+PageLayout:JumpTo(Fishing)
+
+print("CHOWBARCHOICE 3 loaded successfully")
